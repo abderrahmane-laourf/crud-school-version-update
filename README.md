@@ -3,7 +3,6 @@
 Welcome to the **E-Store Dashboard** project!  
 A modern, responsive web interface to visualize key metrics of your online store.  
 Built using **HTML, CSS, Bootstrap**, and **Chart.js** 📊
-
 ---
 
 ## 📸 Preview
