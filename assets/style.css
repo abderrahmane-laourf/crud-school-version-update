@@ -1,0 +1,75 @@
+body {
+    background-color: #f0f2f5; /* Light grey background like the original image */
+}
+
+/* Style header and aside with a specific grey */
+header,
+aside {
+    background-color: #e9ecef !important; /* Custom grey color */
+}
+
+/* Style the primary button to be purple like the image */
+.btn-primary {
+    background-color: #6f42c1; /* Bootstrap purple example */
+    border-color: #6f42c1;
+}
+.btn-primary:hover {
+    background-color: #5a349b;
+    border-color: #5a349b;
+}
+
+/* Header styling */
+header {
+    padding: 1rem;
+}
+.logo {
+     margin-bottom: 0;
+     font-size: 1.75rem;
+     font-weight: bold;
+     color: #343a40; /* Ensure logo text is dark enough */
+}
+
+/* Aside link styling */
+aside .nav-link {
+    color: #495057 !important; /* Dark grey text for links */
+}
+
+ /* Main content area styling */
+ main {
+     /* Set background to white for contrast */
+     background-color: #ffffff; /* White */
+     border-radius: 8px;
+     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional subtle shadow */
+ }
+
+ /* Table header background */
+ .table-light {
+     --bs-table-bg: #f8f9fa; /* Use a lighter grey for table header */
+     --bs-table-border-color: #dee2e6;
+ }
+ /* Table action button styling */
+ .table .btn-light {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    color: #6c757d;
+ }
+ .table .btn-light:hover {
+    background-color: #e9ecef;
+ }
+
+ /* Ensure aside takes full height (relative to viewport minus header) */
+ .row > aside {
+    min-height: calc(100vh - (1rem * 2 + 1.75rem * 1.5)); /* Calculate based on header padding and font size */
+    /* Adjust the calculation above if header height changes significantly */
+ }
+ /* Remove min-height on smaller screens where layout stacks */
+ @media (max-width: 767.98px) {
+    .row > aside {
+        min-height: auto;
+    }
+ }
+
+ .nav-link:focus, .nav-link:active {
+    color: #0d6efd !important;
+    font-weight: bold;
+}

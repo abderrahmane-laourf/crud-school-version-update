@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Store - Opérations Stock</title>
+
+    <!-- ✅ Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Optional Custom CSS -->
+    <link rel="stylesheet" href="/assets/style.css"> <!-- Make sure path is correct -->
+    <!-- SweetAlert2 CSS (Optional but likely used with the JS) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+</head>
+<body id="stockPage">
+    <!-- ✅ HEADER -->
+    <header id="header" class="bg-light sticky-top">
+        <h1 class="logo">E-STORE</h1>
+    </header>
+
+    <!-- ✅ LAYOUT BOOTSTRAP -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- ✅ ASIDE (MENU LATÉRAL) -->
+            <aside id="sidebar" class="col-md-2 bg-light p-3">
+                <nav>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-1">
+                            <a href="/dashboard.html" class="nav-link" id="products-link">dashboard</a>
+                        </li>
+                        <li class="nav-item mb-1">
+                            <!-- Added ID -->
+                           <a href="/pages/index.html" class="nav-link" id="stock-link">Opérations Stock</a>
+                       </li>
+                        <li class="nav-item mb-1">
+                            <!-- This page is active -->
+                            <a href="#" class="nav-link active" id="stock-link" aria-current="page">Opérations Stock</a>
+                        </li>
+                        <li class="nav-item mb-1">
+                            <a href="/pages/vents-management.html" class="nav-link" id="sales-link">Opérations Ventes</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- ✅ MAIN CONTENT -->
+            <main id="main-content" class="col-md-10 p-4">
+                <h2 class="fw-bold mb-3">Opérations Stock</h2>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <!-- Search Bar -->
+                    <div class="input-group w-auto">
+                        <input type="text" class="form-control" id="searchSupplier" placeholder="Chercher un Fournisseur" aria-label="Chercher un Fournisseur">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                    <!-- Button trigger NEW operation modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newOperationModal">
+                        Nouvelle Opération
+                    </button>
+                </div>
+
+                <!-- ✅ TABLEAU DES OPERATIONS -->
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead> <!-- Keep the header -->
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Fournisseur</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Nombre Produits</th>
+                                <th scope="col" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <!-- Table body will be populated by JavaScript -->
+                        <tbody id="productList">
+                            <!-- Static example rows removed -->
+                        </tbody>
+                    </table>
+                </div> <!-- End table-responsive -->
+            </main>
+        </div>
+    </div>
+
+    <div class="modal fade" id="newOperationModal" tabindex="-1" aria-labelledby="newOperationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newOperationModalLabel">Nouvelle Opération Stock</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newStockOpForm">
+                        <!-- Row for Supplier Name and Delivery Date -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="modalSupplierInput" id="nom-fourn" class="form-label">Nom Fournisseur</label>
+                                <input type="text" class="form-control" id="modalSupplierInput" placeholder="Saisir le nom du fournisseur" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="modalDateInput" id="date-livre" class="form-label">Date Livraison</label>
+                                <!-- Date input fixed to a specific value and readonly -->
+                                <input type="date" class="form-control" id="modalDateInput" min="2000-01-01" required>
+
+
+                            </div>
+                        </div>
+                        <hr>
+                        <h6 class="fw-bold mb-3">Produits</h6>
+                        <!-- Product list container - will be populated by JS -->
+                        <div id="productListContainer" class="mb-3">
+                             <!-- Static example rows removed -->
+                        </div>
+                        <!-- Row for adding new products -->
+                        <div class="row align-items-center">
+                            <div class="col-md-5">
+                                <label for="productSelect"  class="form-label visually-hidden">Choisir un Produit</label>
+                                <!-- Select dropdown - options will be populated by JS -->
+                                <select class="form-select" id="productSelect">
+                                    <option selected disabled>Choisir un Produit</option>
+
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="quantityInput" class="form-label visually-hidden">Saisir la Quantité</label>
+                                <input type="number" class="form-control" id="quantityInput" placeholder="Saisir la Quantité" min="1">
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-dark" id="Ajouter-produit" title="Ajouter Produit">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="annulerstock" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" form="newStockOpForm" id="newStockOpForm" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <div class="modal fade" id="viewStockDetailsModal" tabindex="-1" aria-labelledby="viewStockDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewStockDetailsModalLabel">Détails Opération Stock</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Removed <form> tag as it's read-only display -->
+                    <!-- Row for Supplier Name and Delivery Date (Read-only) -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Fournisseur</label>
+                            <!-- Div where JS will place the supplier name -->
+                            <div class="form-control-plaintext" id="viewSupplierName"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Date Livraison</label>
+                            <!-- Div where JS will place the date -->
+                            <div class="form-control-plaintext" id="viewOperationDate"></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h6 class="fw-bold mb-3">Produits</h6>
+                    <!-- Container where JS will list the products and quantities -->
+                    <div id="viewProductList">
+                        <!-- Static example list removed -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button> <!-- Changed text to "Fermer" -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ✅ Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS (Optional but needed if JS uses Swal) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <!-- ✅ Custom JavaScript Files (Load API logic first) -->
+    <!-- Make sure paths are correct relative to this HTML file -->
+    <script type="module" src="/js/operation-stock.js"></script> <!-- Path used in your original HTML -->
+
+
+</body>
+</html>

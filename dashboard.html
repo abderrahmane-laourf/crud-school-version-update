@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-Store - Dashboard ✨</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome for Icons (Still needed for main content) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/style.css" />
+    <style>
+        /* Keep general body background if desired */
+        body {
+            background-color: #f8f9fa;
+        }
+
+        /* --- Styles ONLY for MAIN Content Area --- */
+
+        main {
+             /* Optional: Keep white background and shadow for main area */
+             background-color: #ffffff;
+             border-radius: 8px;
+             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Enhanced Card Styling (Applied only within main) */
+        main .kpi-card, main .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+        main .kpi-card:hover, main .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        main .kpi-card .card-body {
+             position: relative;
+             z-index: 1;
+        }
+        main .kpi-icon { /* Icons within KPI cards */
+            position: absolute;
+            top: 1rem; right: 1rem; font-size: 2.5rem;
+            opacity: 0.2; color: rgba(255, 255, 255, 0.8);
+            z-index: 0;
+        }
+        main .kpi-card.bg-warning .kpi-icon { color: rgba(0, 0, 0, 0.3); }
+        main .kpi-card.bg-warning .kpi-value { color: #333; } /* Text contrast */
+
+        main .kpi-value { /* Styles for the KPI number itself */
+            font-weight: 700; font-size: 2rem; min-height: 3.5rem;
+            display: flex; align-items: center; color: #fff;
+        }
+         main .kpi-value .spinner-border { width: 1.75rem; height: 1.75rem; margin-right: 0.75rem; }
+         main .kpi-value .text-danger { /* Error text style inside KPI */
+             font-size: 1rem; font-weight: 500;
+             color: rgba(255, 255, 255, 0.8) !important;
+         }
+          main .kpi-card.bg-warning .kpi-value .text-danger { color: #dc3545 !important; }
+
+
+        /* Chart Styling (Applied only within main) */
+        main .chart-container {
+            position: relative; min-height: 320px; padding-top: 0.5rem;
+        }
+        main .card-header { /* Style card headers within main */
+            background-color: #fff; border-bottom: 1px solid #eee;
+            font-weight: 600; color: #555;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+         main .card-header .fa-solid { color: var(--bs-secondary); }
+
+        /* Activity Feed Styling (Applied only within main) */
+        main .activity-container {
+             position: relative; min-height: 200px;
+        }
+        main #recent-activity-list {
+            list-style: none; padding-left: 0; margin-bottom: 0;
+            max-height: 410px; overflow-y: auto;
+        }
+        main #recent-activity-list li {
+            display: flex; align-items: center; padding: 0.85rem 0.75rem;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s ease;
+        }
+         main #recent-activity-list li:last-child { border-bottom: none; }
+         main #recent-activity-list li:hover { background-color: #f8f9fa; }
+        main #recent-activity-list .activity-icon {
+            width: 35px; text-align: center; margin-right: 1rem; font-size: 1.2rem;
+        }
+         main #recent-activity-list .activity-icon .fa-arrow-up { color: var(--bs-success); }
+         main #recent-activity-list .activity-icon .fa-arrow-down { color: var(--bs-danger); }
+        main #recent-activity-list .activity-details { flex-grow: 1; line-height: 1.4; }
+        main #recent-activity-list .activity-name { font-weight: 500; color: #333; }
+        main #recent-activity-list .activity-date { font-size: 0.8em; color: #777; }
+
+        /* Overlays (Applied only within main) */
+         main .chart-loading-overlay, main .chart-error-overlay,
+         main .activity-loading-overlay, main .activity-error-overlay {
+             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+             display: flex; justify-content: center; align-items: center;
+             background-color: rgba(255, 255, 255, 0.9);
+             z-index: 10; text-align: center; padding: 1rem;
+             border-radius: var(--bs-card-inner-border-radius); /* Match card radius */
+         }
+         main .chart-loading-overlay .spinner-border,
+         main .activity-loading-overlay .spinner-border { width: 3rem; height: 3rem; }
+         main .chart-error-overlay, main .activity-error-overlay {
+            color: var(--bs-danger); font-weight: bold; font-size: 1.1rem;
+         }
+         main .chart-loading-overlay.d-none, main .chart-error-overlay.d-none,
+         main .activity-loading-overlay.d-none, main .activity-error-overlay.d-none { display: none; }
+
+        /* --- End Styles for MAIN Content --- */
+
+        /* Optional: Simple style for logo if needed */
+        .logo {
+            font-weight: bold;
+            /* color: var(--bs-primary); */ /* Keep default color */
+        }
+         /* Simple active link for sidebar */
+        aside .nav-link.active {
+            font-weight: bold;
+            /* Remove custom background/color */
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Header - Reverted to original simple style -->
+    <header class="bg-light sticky-top p-3">
+        <h1 class="logo">E-STORE</h1>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row"> <!-- Removed padding -->
+            <!-- Sidebar - Reverted to original simple style -->
+            <aside class="col-md-2 bg-light p-3">
+                <nav>
+                     <ul class="nav flex-column">
+                        <!-- Links without icons -->
+                        <li class="nav-item mb-1"><a href="#" class="nav-link active" id="dashboard-link" aria-current="page">Dashboard</a></li>
+                        <li class="nav-item mb-1"><a href="/pages/index.html" class="nav-link" id="products-link">Gestion Produits</a></li>
+                        <li class="nav-item mb-1"><a href="/pages/operation-stock.html" class="nav-link" id="stock-link">Opérations Stock</a></li>
+                        <li class="nav-item mb-1"><a href="/pages/vents-management.html" class="nav-link" id="sales-link">Opérations Ventes</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Content Area - Enhanced styling applied here -->
+            <main class="col-md-10 p-4">
+                <h2 class="fw-bold mb-4">Dashboard</h2> <!-- Emoji Kept -->
+
+                <!-- KPIs (Enhanced Style) -->
+                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4 mb-4">
+                    <div class="col">
+                        <div class="card text-white bg-primary h-100 kpi-card rounded-3">
+                            <div class="card-body">
+                                <i class="fas fa-cubes kpi-icon"></i>
+                                <h5 class="card-title">Total Produits</h5>
+                                <p class="card-text kpi-value" id="total-products"><span class="spinner-border spinner-border-sm"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card text-white bg-success h-100 kpi-card rounded-3">
+                            <div class="card-body">
+                                <i class="fas fa-check-circle kpi-icon"></i>
+                                <h5 class="card-title">Stock Disponible</h5>
+                                <p class="card-text kpi-value" id="stock-available"><span class="spinner-border spinner-border-sm"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card text-white bg-info h-100 kpi-card rounded-3">
+                             <div class="card-body">
+                                <i class="fas fa-dolly kpi-icon"></i>
+                                <h5 class="card-title">Total Vendus (Unités)</h5>
+                                <p class="card-text kpi-value" id="products-sold"><span class="spinner-border spinner-border-sm"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card text-dark bg-warning h-100 kpi-card rounded-3">
+                             <div class="card-body">
+                                <i class="fas fa-exchange-alt kpi-icon"></i>
+                                <h5 class="card-title">Opérations Stock</h5>
+                                <p class="card-text kpi-value" id="stock-operations"><span class="spinner-border spinner-border-sm"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row (Enhanced Style) -->
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-7">
+                        <div class="card h-100 rounded-3">
+                            <div class="card-header"><i class="fa-solid fa-chart-line"></i>Ventes Mensuelles</div>
+                            <div class="card-body chart-container">
+                                <div class="chart-loading-overlay" id="sales-chart-loading"><div class="spinner-border text-primary"></div></div>
+                                <div class="chart-error-overlay d-none" id="sales-chart-error">Erreur chargement graphique.</div>
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="card h-100 rounded-3">
+                            <div class="card-header"><i class="fa-solid fa-chart-bar"></i>Top 5 Produits: Stock vs. Vendus</div>
+                            <div class="card-body chart-container">
+                                <div class="chart-loading-overlay" id="product-chart-loading"><div class="spinner-border text-success"></div></div>
+                                <div class="chart-error-overlay d-none" id="product-chart-error">Erreur chargement graphique.</div>
+                                <canvas id="productStockChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Recent Activity Row (Enhanced Style) -->
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="card rounded-3">
+                            <div class="card-header"><i class="fa-solid fa-list-ul"></i>Activité Récente</div>
+                            <div class="card-body activity-container p-0">
+                                <div class="activity-loading-overlay" id="activity-loading"><div class="spinner-border text-secondary"></div></div>
+                                <div class="activity-error-overlay d-none" id="activity-error">Impossible de charger l'activité récente.</div>
+                                <ul id="recent-activity-list">
+                                    <!-- Items populated by JS -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- JS Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <!-- Custom Dashboard JS -->
+    <script type="module" src="/js/dashboard.js"></script> <!-- Keep your existing JS -->
+
+</body>
+</html>
