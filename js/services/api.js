@@ -34,8 +34,6 @@ async function handleResponse(response) {
         return { success: true }; // Indicate success for DELETE or successful PUT with no body
     }
 
-    // Otherwise, parse and return the JSON body for successful responses (200, 201, etc.)
-    // Check content type before parsing to avoid errors on non-JSON responses
     if (response.headers.get("content-type")?.includes("application/json")) {
         return await response.json();
     } else {
