@@ -40,7 +40,7 @@ function initializeSalesChart() {
                 borderRadius: 5
             }]
         },
-        options: { /* ... keep existing options ... */
+        options: { 
             responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: 'top' }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label || ''}: ${ctx.parsed.y?.toLocaleString('fr-FR') || 0} unités` } } },
             scales: { y: { beginAtZero: true, ticks: { callback: val => val.toLocaleString('fr-FR') } }, x: { grid: { display: false } } },
             animation: { duration: 1000, easing: 'easeInOutQuad' }
