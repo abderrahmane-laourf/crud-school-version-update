@@ -89,16 +89,6 @@ export async function updateProduct(productId, productData) {
 }
 export async function deleteProduct(productId) {
     const result = await apiRequest(`/products/${productId}`, 'DELETE');
-    return result !== null; // HADI KHASHA TBEDDEL ILA BGHTI boolean awla throw error
-    // Option 1 (b7al qbel, kat rejje3 boolean): return result !== null;
-    // Option 2 (Hssen m3a l changement f apiRequest): Makadir walo hna, l'erreur dyal apiRequest ghatwsel
-    //            W f l frontend, tched l'erreur dyal deleteProduct w dir Swal.
-    // Ana ghankheli Option 1 daba, mais l'Option 2 hssen f logique jdida.
-    // Let's go with Option 2 logic - if apiRequest fails, it throws, otherwise it succeeded.
-    // So, if it reaches here without throwing, it was successful.
-    // return true; // This implies success if no error was thrown by apiRequest
-    // UPDATE: The original delete returned boolean based on NULL check. Let's keep that for now for consistency,
-    // but acknowledge that catching the specific error in the frontend is better.
     return result !== null;
 }
 
