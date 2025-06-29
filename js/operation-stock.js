@@ -1,5 +1,6 @@
 import { getStockOperations, addStockOperation, getProducts, deleteStockOperationById, getStockOperationDetails } from './services/api.js';
 
+
 function formatDate(dateString) {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
