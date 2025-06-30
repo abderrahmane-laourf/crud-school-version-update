@@ -1,6 +1,5 @@
 import { getSales, addSale, getSaleDetails, deleteSale, getProducts } from './services/api.js';
 
-// --- Helper Functions ---
 
 function formatDate(dateString) {
     if (!dateString) return "Date inconnue";
