@@ -1,4 +1,4 @@
-// vents-management.js
+
 
 import { getSales, addSale, getSaleDetails, deleteSale, getProducts } from './services/api.js';
 
