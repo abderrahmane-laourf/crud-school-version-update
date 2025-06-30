@@ -1,6 +1,5 @@
 import { getSales, addSale, getSaleDetails, deleteSale, getProducts } from './services/api.js';
 
-
 function formatDate(dateString) {
     if (!dateString) return "Date inconnue";
     const date = new Date(dateString);
